@@ -1,0 +1,130 @@
+service password-encryption
+service compress-config
+!
+hostname D4
+!
+boot-start-marker
+boot-end-marker
+!
+aaa new-model
+clock timezone EET 2 0
+!
+ip dhcp excluded-address 192.168.6.1 192.168.6.5
+ip dhcp excluded-address 192.168.7.1 192.168.7.5
+ip dhcp excluded-address 192.168.8.1 192.168.8.5
+ip dhcp excluded-address 192.168.9.1 192.168.9.5
+!
+ip dhcp pool vl6
+ network 192.168.6.0 255.255.255.0
+ dns-server 8.8.8.8
+ domain-name elallouchi.com
+ default-router 192.168.6.3
+!
+ip dhcp pool vl7
+ network 192.168.7.0 255.255.255.0
+ default-router 192.168.7.3
+ dns-server 8.8.8.8
+ domain-name elallouchi.com
+!
+ip dhcp pool vl8
+ network 192.168.8.0 255.255.255.0
+ default-router 192.168.8.3
+ dns-server 8.8.8.8
+ domain-name elallouchi.com
+!
+ip dhcp pool vl9
+ network 192.168.9.0 255.255.255.0
+ default-router 192.168.9.3
+ dns-server 8.8.8.8
+ domain-name elallouchi.com
+!
+!
+ip cef
+no ipv6 cef
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 6-7 priority 28672
+spanning-tree vlan 8-9 priority 24576
+!
+vlan internal allocation policy ascending
+!
+interface Ethernet0/0
+ no switchport
+ ip address 172.16.8.2 255.255.255.252
+ duplex auto
+!
+interface Ethernet0/1
+ no switchport
+ ip address 172.16.4.2 255.255.255.252
+ duplex auto
+!
+interface Ethernet0/2
+ no switchport
+ ip address 192.168.10.2 255.255.255.0
+ duplex auto
+!
+interface Ethernet0/3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet1/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet1/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet1/2
+ shutdown
+interface Ethernet1/3
+ shutdown
+interface Ethernet2/0
+ shutdown
+interface Ethernet2/1
+ shutdown
+interface Ethernet2/2
+ shutdown
+interface Ethernet2/3 
+ shutdown
+interface Ethernet3/0
+ shutdown
+interface Ethernet3/1
+ shutdown
+interface Ethernet3/2
+ shutdown
+interface Ethernet3/3
+ shutdown
+interface Vlan6
+ ip address 192.168.6.3 255.255.255.0
+ standby 6 ip 192.168.6.1
+!
+interface Vlan7
+ ip address 192.168.7.3 255.255.255.0
+ standby 7 ip 192.168.7.1
+!
+interface Vlan8
+ ip address 192.168.8.3 255.255.255.0
+ standby 8 ip 192.168.8.1
+ standby 8 priority 150
+ standby 8 preempt
+!
+interface Vlan9
+ ip address 192.168.9.3 255.255.255.0
+ standby 9 ip 192.168.9.1
+ standby 9 priority 150
+ standby 9 preempt
+!
+!
+router eigrp 1
+ network 172.16.4.0 0.0.0.255
+ network 172.16.8.0 0.0.0.255
+ network 192.168.6.0
+ network 192.168.7.0
+ network 192.168.8.0
+ network 192.168.9.0
+ network 192.168.10.0
